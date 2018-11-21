@@ -8,11 +8,14 @@ public class PlayerController : MonoBehaviour {
 
 	public float moveSpeed = 1000f;
 	CanvasController cc;
+	Vector3 resetPosition;
 	Vector3 offset;
 	Rigidbody rb;
 
 	// Use this for initialization
 	void Start () {
+		transform.position = resetPosition;
+
 		rb = this.GetComponent<Rigidbody>();
 	
 		offset = Camera.main.transform.position - this.transform.position;
@@ -30,8 +33,10 @@ public class PlayerController : MonoBehaviour {
 		Vector3 directionVector = new Vector3 (hdir, 0, vdir);
 		Vector3 unitVector = directionVector.normalized;
 		Vector3 forceVector = unitVector * moveSpeed * Time.deltaTime;
-
 		rb.AddForce(forceVector);
+		if (transform.position.y < -25f) {
+			ReturnToCheckPoint();
+		}
 		
 	}
 
@@ -46,7 +51,12 @@ public class PlayerController : MonoBehaviour {
 				col.isCollected = true;
 				cc.IncreaseScore (1);
 
+
 			}
 		}
+	}
+
+	void ReturnToCheckPoint() {
+		transform.position = resetPosition;
 	}
 }
